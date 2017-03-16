@@ -1,0 +1,37 @@
+import subprocess
+import shutil
+import os
+import time
+
+os.chdir("C:\\Users\\Diego Salazar\\Desktop\\anaoptPDB")
+pdbqt = os.listdir(os.getcwd())
+
+app = 'vina.exe'
+appPath = os.path.join("C:\Program Files (x86)\The Scripps Research Institute\Vina", app)
+
+receptor = 'xxxx.pdbqt' # xxxx <- Name of protein
+
+for i in pdbqt:
+    if i.endswith('.pdb') == True & i.startswith('A') == True:
+        os.chdir("C:\\Users\\Diego Salazar\\Desktop\\anaoptPDB")
+        archivo_1 = 'C:\\Users\\Diego Salazar\\Desktop\\anaoptPDB' + '\\' +  i.replace(".pdb", "")
+        archivo_2 = archivo_1 + '\\' +  i.replace(".pdb", ".pdbqt")
+        os.mkdir(archivo_1)
+        shutil.copyfile('C:\\Users\\Diego Salazar\\Desktop\\anaoptPDB' + '\\' +  i.replace(".pdb", ".pdbqt"), archivo_2)
+        shutil.copyfile('C:\\Users\\Diego Salazar\\Desktop\\anaoptPDB' + '\\' +  receptor, archivo_1 + '\\' + receptor)
+        os.chdir(archivo_1)
+        conteo=1
+        #if i.startswith("A") == True:
+        #os.mkdir('C:\Users\Diego Salazar\Desktop\docking_Osa' + '\\' +  i.replace(".pdbqt", ""))
+        for j in xrange(0,10):
+            out = i.replace(".pdb", "") + "_out_" + str(conteo+j) + ".pdbqt"
+            log = 'log_' + str(conteo+j) + '.txt'
+            commandLine = [app, '--receptor', receptor, '--ligand', i.replace(".pdb", ".pdbqt"), '--center_x', '21.575',
+                           '--center_y', '-1.812', '--center_z', '-17.172', 
+                           '--size_x', '50', '--size_y', '47', 
+                           '--size_z', '42', '--exhaustiveness', '8', '--out', out, '--log', log]
+            subprocess.Popen(commandLine, executable=appPath)
+            time.sleep(25)
+    else:
+        pass
+
